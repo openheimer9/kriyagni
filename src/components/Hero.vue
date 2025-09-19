@@ -31,10 +31,10 @@
         Transform your business with cutting-edge AI and prompt engineering services that deliver clear, actionable insights.
       </p>
       <div class="flex flex-col sm:flex-row justify-center gap-6">
-        <a href="/start" class="btn-primary">
+        <a href="/login" class="btn-primary">
           Start Now
         </a>
-        <a href="/learn" class="btn-secondary">
+        <a href="/about" class="btn-secondary">
           Learn More
         </a>
       </div>
