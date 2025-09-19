@@ -1,5 +1,5 @@
 <template>
-  <section class="bg-gray-900 py-24 sm:py-32">
+  <section class="bg-gray-900 pt-16 pb-24 sm:pt-20 sm:pb-32">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
       <div class="mx-auto max-w-2xl text-center mb-16">
         <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">Why Choose Our AI Workflows</h2>
