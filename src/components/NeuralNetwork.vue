@@ -13,6 +13,7 @@ let renderer: THREE.WebGLRenderer;
 let points: THREE.Points;
 let connections: THREE.LineSegments;
 let frameId: number;
+let colorPhase = 0; // For color animation
 
 interface Node {
   position: THREE.Vector3;
@@ -31,16 +32,16 @@ const init = () => {
 
   // Create neural network
   const nodes: Node[] = [];
-  const nodeCount = 50;
-  const maxConnections = 3;
+  const nodeCount = 200; // Further increased node count
+  const maxConnections = 8; // Further increased max connections
 
   // Create nodes
   for (let i = 0; i < nodeCount; i++) {
     nodes.push({
       position: new THREE.Vector3(
-        (Math.random() - 0.5) * 100,
-        (Math.random() - 0.5) * 100,
-        (Math.random() - 0.5) * 50
+        (Math.random() - 0.5) * 150, // Increased spread
+        (Math.random() - 0.5) * 150, // Increased spread
+        (Math.random() - 0.5) * 75
       ),
       connections: []
     });
@@ -66,7 +67,7 @@ const init = () => {
     pointsPositions[i * 3] = node.position.x;
     pointsPositions[i * 3 + 1] = node.position.y;
     pointsPositions[i * 3 + 2] = node.position.z;
-    pointsSizes[i] = Math.random() * 2 + 1;
+    pointsSizes[i] = Math.random() * 4 + 2; // Further increased base size and variation
   });
 
   pointsGeometry.setAttribute('position', new THREE.BufferAttribute(pointsPositions, 3));
@@ -74,9 +75,9 @@ const init = () => {
 
   const pointsMaterial = new THREE.PointsMaterial({
     color: 0x4a90e2,
-    size: 1,
+    size: 2, // Further increased base size
     transparent: true,
-    opacity: 0.8,
+    opacity: 1, // Full opacity
     sizeAttenuation: true
   });
 
@@ -102,30 +103,40 @@ const init = () => {
   const linesMaterial = new THREE.LineBasicMaterial({
     color: 0x4a90e2,
     transparent: true,
-    opacity: 0.3
+    opacity: 0.7 // Further increased opacity
   });
 
   connections = new THREE.LineSegments(linesGeometry, linesMaterial);
   scene.add(connections);
 
-  camera.position.z = 100;
+  camera.position.z = 150; // Further adjusted camera position for wider view
 };
 
 const animate = () => {
   frameId = requestAnimationFrame(animate);
 
   if (points && connections) {
-    points.rotation.x += 0.001;
-    points.rotation.y += 0.001;
-    connections.rotation.x += 0.001;
-    connections.rotation.y += 0.001;
+    points.rotation.x += 0.003; // Further increased rotation speed
+    points.rotation.y += 0.003; // Further increased rotation speed
+    connections.rotation.x += 0.003; // Further increased rotation speed
+    connections.rotation.y += 0.003; // Further increased rotation speed
 
     // Pulse effect for points
     const sizes = points.geometry.attributes.size;
     for (let i = 0; i < sizes.count; i++) {
-      sizes.array[i] = Math.sin(Date.now() * 0.001 + i) + 2;
+      sizes.array[i] = (Math.sin(Date.now() * 0.003 + i) + 2) * 2; // Adjusted pulse effect for more intensity
     }
     sizes.needsUpdate = true;
+
+    // Color animation for points and connections (more vibrant)
+    colorPhase += 0.007; // Adjust speed of color change
+    const hue = (Math.sin(colorPhase) * 0.5 + 0.5) * 360; // Smooth hue transition
+    const saturation = (Math.sin(colorPhase * 0.7) * 0.2 + 0.8) * 100; // More vibrant saturation
+    const lightness = (Math.sin(colorPhase * 1.2) * 0.1 + 0.6) * 100; // More dynamic lightness
+    const color = new THREE.Color(`hsl(${hue}, ${saturation}%, ${lightness}%)`);
+
+    (points.material as THREE.PointsMaterial).color.set(color);
+    (connections.material as THREE.LineBasicMaterial).color.set(color);
   }
 
   renderer.render(scene, camera);

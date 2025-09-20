@@ -7,29 +7,22 @@
     <BrainModel />
     
     <!-- Neural Network Grid -->
-    <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.1) 1px, transparent 0); background-size: 40px 40px;"></div>
+    <NeuralNetwork />
     
     <!-- Floating Particles -->
-    <div class="absolute inset-0 overflow-hidden">
-      <div v-for="n in 10" :key="n" 
-           class="particle absolute rounded-full bg-white"
-           :style="getParticleStyle(n)">
-      </div>
-    </div>
+    <FloatingParticles />
 
     <!-- Content -->
     <div class="relative container mx-auto px-4 text-center z-10" data-aos="fade-up">
-      <h1 class="text-4xl md:text-6xl font-bold mb-6 font-poppins bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600 animate-gradient">
-        <span v-for="(word, index) in title" :key="index" 
-              class="inline-block hover:scale-105 transition-transform duration-300 mx-1"
-              :style="{ animationDelay: `${index * 0.1}s` }">
-          {{ word }}
-        </span>
+      <h1 class="text-6xl md:text-8xl font-extrabold mb-8 font-poppins text-[#E5EAF5] drop-shadow-md animate-text-3d">
+      Kriyagni AI
       </h1>
-      <p ref="description" class="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto opacity-0 transform translate-y-4 transition-all duration-1000"
-         :class="{ 'opacity-100 translate-y-0': isDescriptionVisible }">
-        Transform your business with cutting-edge AI and prompt engineering services that deliver clear, actionable insights.
-      </p>
+      <h4 class="text-2xl md:text-3xl font-poppins text-[#E5EAF5] drop-shadow-md animate-text-3d mb-8">
+  Transform your business with cutting-edge AI and prompt engineering services
+  that deliver clear, actionable insights.
+</h4>
+
+
       <div class="flex flex-col sm:flex-row justify-center gap-6">
         <a href="/login" class="btn-primary">
           Start Now
@@ -44,22 +37,12 @@
 
 <script setup lang="ts">
 import BrainModel from './BrainModel.vue';
+import NeuralNetwork from './NeuralNetwork.vue'; // Ensure NeuralNetwork is imported
+import FloatingParticles from './FloatingParticles.vue'; // Import the new component
 import { ref, onMounted } from 'vue';
 
-const title = ['Empowering', 'Decisions', 'with', 'AI', 'Solutions'];
 const description = ref<HTMLElement | null>(null);
 const isDescriptionVisible = ref(false);
-
-const particles = ref(Array.from({ length: 10 }, (_, i) => ({
-  width: (Math.sin(i) * 2 + 2) + 'px',
-  height: (Math.sin(i) * 2 + 2) + 'px',
-  left: ((i * 10) % 100) + '%',
-  top: ((i * 7) % 100) + '%',
-  animationDuration: (15 + i * 2) + 's',
-  animationDelay: (i * 0.5) + 's'
-})));
-
-const getParticleStyle = (n: number) => particles.value[n - 1];
 
 onMounted(() => {
   setTimeout(() => {
@@ -91,6 +74,28 @@ onMounted(() => {
 .btn-secondary {
   @apply px-8 py-4 bg-transparent border-2 border-white text-white font-semibold rounded-lg
          transform transition-all duration-300 hover:bg-white hover:text-gray-900;
+}
+
+.animate-text-3d {
+  text-shadow: 0 0 10px rgba(139, 92, 246, 0.7), /* Purple */
+               0 0 20px rgba(99, 102, 241, 0.5), /* Indigo/Blue */
+               0 0 30px rgba(139, 92, 246, 0.3),
+               0 0 40px rgba(99, 102, 241, 0.1);
+  animation: neon-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes neon-glow {
+  from {
+    text-shadow: 0 0 5px rgba(139, 92, 246, 0.7),
+                 0 0 10px rgba(99, 102, 241, 0.5),
+                 0 0 15px rgba(139, 92, 246, 0.3);
+  }
+  to {
+    text-shadow: 0 0 10px rgba(139, 92, 246, 1),
+                 0 0 20px rgba(99, 102, 241, 0.8),
+                 0 0 40px rgba(139, 92, 246, 0.6),
+                 0 0 60px rgba(99, 102, 241, 0.4);
+  }
 }
 
 .particle {

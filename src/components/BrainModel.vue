@@ -1,5 +1,5 @@
 <template>
-  <div ref="container" class="absolute inset-0 z-0 transition-opacity duration-1000" :class="{ 'opacity-70': isHovered }" @mouseenter="isHovered = true" @mouseleave="isHovered = false"></div>
+  <div ref="container" class="absolute inset-0 z-0 transition-opacity duration-1000" :class="{ 'opacity-80': isHovered }" @mouseenter="isHovered = true" @mouseleave="isHovered = false"></div>
 </template>
 
 <script setup lang="ts">
@@ -13,7 +13,7 @@ let camera: THREE.PerspectiveCamera;
 let renderer: THREE.WebGLRenderer;
 let brain: THREE.Mesh;
 let frameId: number;
-let rotationSpeed = 0.005;
+let rotationSpeed = 0.008; // Increased base rotation speed
 
 const init = () => {
   if (!container.value) return;
@@ -26,12 +26,12 @@ const init = () => {
   container.value.appendChild(renderer.domElement);
 
   // Create brain mesh (simplified representation)
-  const geometry = new THREE.SphereGeometry(3, 32, 32);
+  const geometry = new THREE.SphereGeometry(4, 32, 32); // Increased size
   const material = new THREE.MeshPhongMaterial({
     color: 0x4a90e2,
     wireframe: true,
     transparent: true,
-    opacity: 0.8,
+    opacity: 0.9, // Increased opacity
   });
   brain = new THREE.Mesh(geometry, material);
   scene.add(brain);
@@ -51,13 +51,13 @@ const animate = () => {
   frameId = requestAnimationFrame(animate);
 
   if (brain) {
-    const targetSpeed = isHovered.value ? 0.02 : 0.005;
+    const targetSpeed = isHovered.value ? 0.03 : 0.008; // Adjusted hover speed
     rotationSpeed += (targetSpeed - rotationSpeed) * 0.1;
     
     brain.rotation.x += rotationSpeed;
     brain.rotation.y += rotationSpeed;
     
-    const scale = isHovered.value ? 1.2 : 1;
+    const scale = isHovered.value ? 1.3 : 1.1; // Adjusted hover scale
     brain.scale.lerp(new THREE.Vector3(scale, scale, scale), 0.1);
   }
 
