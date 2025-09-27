@@ -1,13 +1,13 @@
 <template>
-  <section class="relative py-20 bg-gray-900 overflow-hidden">
+  <section class="relative py-20 bg-blue-900 overflow-hidden">
     <CircuitPattern />
     <div class="container mx-auto px-4 relative z-10">
       <!-- Section Header -->
-      <div class="text-center mb-16" data-aos="fade-up">
-        <h2 class="text-3xl md:text-4xl font-bold mb-4 font-poppins">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4 font-poppins bg-clip-text text-transparent bg-gradient-to-r from-blue-300 to-purple-300">
           AI Solutions That Drive Results
         </h2>
-        <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+        <p class="text-xl max-w-2xl mx-auto bg-clip-text text-transparent bg-gradient-to-r from-blue-200 to-purple-200">
           Discover how our AI-powered services can transform your business processes and decision-making.
         </p>
       </div>
@@ -15,16 +15,14 @@
       <!-- Service Cards -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <div v-for="(service, index) in services" :key="index"
-             class="group bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 transform transition-all duration-500 hover:scale-105 hover:bg-gray-800/90"
-             :data-aos="service.animation"
-             :data-aos-delay="service.delay">
+             class="group bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 transform transition-all duration-500 hover:scale-105 hover:bg-gray-800/90">
           <div class="h-48 mb-6 overflow-hidden rounded-lg bg-gradient-to-br from-purple-500/20 to-blue-500/20 flex items-center justify-center relative">
             <div class="absolute inset-0 bg-gradient-to-br from-purple-600/0 to-blue-600/0 group-hover:from-purple-600/20 group-hover:to-blue-600/20 transition-all duration-500"></div>
             <component :is="service.icon" 
                      class="w-24 h-24 text-blue-500 transform transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12" />
           </div>
           <h3 class="text-xl font-bold mb-3 font-poppins bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">{{ service.title }}</h3>
-          <p class="text-gray-400 transition-colors duration-300 group-hover:text-gray-300">{{ service.description }}</p>
+          <p class="text-gray-300 transition-colors duration-300 group-hover:text-white">{{ service.description }}</p>
         </div>
       </div>
     </div>

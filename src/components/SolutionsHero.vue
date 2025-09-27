@@ -3,7 +3,7 @@
     <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(56,189,248,0.1),transparent_50%)]" />
     <div class="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(168,85,247,0.1),transparent_50%)]" />
     
-    <div class="container mx-auto px-4 py-20 text-center relative z-10" data-aos="fade-up">
+    <div class="container mx-auto px-4 py-20 text-center relative z-10">
       <h1 class="text-5xl md:text-6xl font-bold text-white mb-6 font-poppins bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
         Smart Solutions
       </h1>

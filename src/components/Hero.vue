@@ -1,7 +1,7 @@
 <template>
   <section class="relative min-h-screen flex items-center justify-center overflow-hidden py-20">
     <!-- Gradient Background -->
-    <div class="absolute inset-0 bg-gradient-to-br from-purple-900 via-blue-900 to-gray-900 opacity-90"></div>
+    <div class="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900 opacity-100"></div>
     
     <!-- 3D Brain Model -->
     <BrainModel />
@@ -9,11 +9,10 @@
     <!-- Neural Network Grid -->
     <NeuralNetwork />
     
-    <!-- Floating Particles -->
-    <FloatingParticles />
+
 
     <!-- Content -->
-    <div class="relative container mx-auto px-4 text-center z-10" data-aos="fade-up">
+    <div class="relative container mx-auto px-4 text-center z-10">
       <h1 class="text-6xl md:text-8xl font-extrabold mb-8 font-poppins text-[#E5EAF5] drop-shadow-md animate-text-3d">
       Kriyagni AI
       </h1>
@@ -38,7 +37,7 @@
 <script setup lang="ts">
 import BrainModel from './BrainModel.vue';
 import NeuralNetwork from './NeuralNetwork.vue'; // Ensure NeuralNetwork is imported
-import FloatingParticles from './FloatingParticles.vue'; // Import the new component
+
 import { ref, onMounted } from 'vue';
 
 const description = ref<HTMLElement | null>(null);

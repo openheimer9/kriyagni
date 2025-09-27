@@ -1,58 +1,61 @@
 <template>
-  <section class="py-16 md:py-24 bg-white">
-    <div class="container mx-auto px-4">
-      <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-        <!-- Category Filter -->
-        <div class="w-full md:w-auto">
-          <label for="category" class="sr-only">Filter by Category</label>
-          <select id="category" v-model="selectedCategory" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
-            <option value="">All Categories</option>
-            <option v-for="category in uniqueCategories" :key="category" :value="category">{{ category }}</option>
-          </select>
+  <section class="bg-gray-900 py-16 sm:py-24">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <!-- Search and Filter Controls -->
+      <div class="mb-12 grid gap-8 md:grid-cols-2">
+        <!-- Search -->
+        <div class="relative">
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Search posts..."
+            class="w-full rounded-lg border border-gray-700 bg-gray-800/50 px-4 py-2.5 text-gray-300 placeholder:text-gray-500 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+          />
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+            <svg class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" />
+            </svg>
+          </div>
         </div>
-
-        <!-- Search Input -->
-        <div class="w-full md:w-auto">
-          <label for="search" class="sr-only">Search posts</label>
-          <input type="text" id="search" v-model="searchTerm" placeholder="Search by title or tag..." class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2" />
+        <!-- Category Filter -->
+        <div class="flex flex-wrap gap-3">
+          <button
+            v-for="category in categories"
+            :key="category"
+            @click="toggleCategory(category)"
+            :class="[
+              'rounded-full px-4 py-1.5 text-sm font-medium transition-colors duration-200',
+              selectedCategories.includes(category)
+                ? 'bg-purple-500 text-white'
+                : 'bg-gray-800/50 text-gray-300 hover:bg-purple-500/20'
+            ]"
+          >
+            {{ category }}
+          </button>
         </div>
       </div>
 
-      <!-- Featured Post (Optional, if needed) -->
-      <!-- <div v-if="featuredPost" class="mb-12">
-        <BlogCard :post="featuredPost" class="col-span-full" />
-      </div> -->
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <BlogCard v-for="post in paginatedPosts" :key="post.title" :post="post" />
+      <!-- Blog Grid -->
+      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-2">
+        <template v-for="post in displayedPosts" :key="post.title">
+          <BlogCard :post="post" />
+        </template>
       </div>
 
       <!-- Pagination -->
-      <div v-if="totalPages > 1" class="flex justify-center mt-12 space-x-2">
-        <button
-          @click="currentPage--"
-          :disabled="currentPage === 1"
-          class="px-4 py-2 border rounded-md shadow-sm text-sm font-medium"
-          :class="currentPage === 1 ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-white text-indigo-600 hover:bg-gray-50'"
-        >
-          Previous
-        </button>
+      <div v-if="totalPages > 1" class="mt-12 flex justify-center gap-2">
         <button
           v-for="page in totalPages"
           :key="page"
           @click="currentPage = page"
-          class="px-4 py-2 border rounded-md shadow-sm text-sm font-medium"
-          :class="currentPage === page ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'"
+          :class="[
+            'px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200',
+            currentPage === page
+              ? 'bg-purple-500 text-white'
+              : 'bg-gray-800/50 text-gray-300 hover:bg-purple-500/20'
+          ]"
         >
           {{ page }}
-        </button>
-        <button
-          @click="currentPage++"
-          :disabled="currentPage === totalPages"
-          class="px-4 py-2 border rounded-md shadow-sm text-sm font-medium"
-          :class="currentPage === totalPages ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-white text-indigo-600 hover:bg-gray-50'"
-        >
-          Next
         </button>
       </div>
     </div>
@@ -63,90 +66,75 @@
 import { ref, computed } from 'vue';
 import BlogCard from './BlogCard.vue';
 
-const posts = ref([
+// Sample blog posts data
+const posts = [
   {
-    title: "The Future of AI-Driven Decision Making",
+    title: "Simulation-Based Policy Making: The Future of Governance in the AI Era",
     author: "Kriyagni AI Team",
-    date: "September 15, 2025",
-    excerpt: "How prompt engineering is revolutionizing business strategy and execution across industries.",
-    category: "AI Strategy",
-    image: "/public/images/blog-ai-decision.png",
-    tags: ["AI", "Decision Making", "Business Strategy"],
+    date: "October 26, 2023",
+    excerpt: "How advanced modeling and AI simulations can transform policy development from guesswork to precision",
+    category: "AI Governance",
+    image: "/images/blog-ai-governance.svg",
+    tags: ["AI", "Policy Making", "Governance", "Simulation"],
+    slug: "simulation-based-policy-making"
   },
   {
-    title: "Automated Workflows: A Complete Guide",
+    title: "Companies Act 2013 Reform Package: Loophole-Proof Framework",
     author: "Kriyagni AI Team",
-    date: "September 10, 2025",
-    excerpt: "Step-by-step process to implement AI workflows that boost efficiency by 60% or more.",
-    category: "Automation",
-    image: "/public/images/blog-workflows.jpg",
-    tags: ["Automation", "Workflows", "Efficiency"],
-  },
-  {
-    title: "Prompt Systems That Actually Work",
-    author: "Kriyagni AI Team",
-    date: "September 5, 2025",
-    excerpt: "Real-world prompt engineering techniques that deliver measurable results.",
-    category: "Prompt Engineering",
-    image: "/public/images/blog-prompts.jpg",
-    tags: ["Prompts", "AI Systems", "Results"],
-  },
-  {
-    title: "From Complex Problems to Clear Solutions",
-    author: "Kriyagni AI Team",
-    date: "August 30, 2025",
-    excerpt: "How we helped a startup reduce decision-making time by 50% using AI clarity tools.",
-    category: "Case Study",
-    image: "/public/images/blog-case-study.jpg",
-    tags: ["Case Study", "Success Story", "Problem Solving"],
-  },
-  {
-    title: "Building Practical AI for Real Business",
-    author: "Kriyagni AI Team",
-    date: "August 25, 2025",
-    excerpt: "Why practical implementation beats theoretical AI, and how to ensure your AI actually works.",
-    category: "Practical AI",
-    image: "/public/images/blog-practical-ai.jpg",
-    tags: ["Practical AI", "Implementation", "Business Value"],
-  },
-]);
+    date: "December 1, 2023",
+    excerpt: "After analyzing potential vulnerabilities, here’s a comprehensive reform framework designed to boost India’s startup ecosystem while preventing abuse and maintaining system integrity.",
+    category: "AI Governance",
+    image: "/images/blog-ai-governance.svg",
+    tags: ["Companies Act", "Startups", "Governance", "India"],
+    slug: "companies-act-2013-reform-package"
+  }
+];
 
-const selectedCategory = ref('');
-const searchTerm = ref('');
+// State
+const searchQuery = ref('');
+const selectedCategories = ref([]);
 const currentPage = ref(1);
-const postsPerPage = 6; // You can adjust this value
+const postsPerPage = 2;
+
+// Computed properties
+const categories = computed(() => [
+    'AI Governance',
+    'AI Ethics',
+    'AI in Education',
+    'AI and Environment',
+    'Cybersecurity',
+    'AI and Future of Work',
+    'AI and Creativity'
+  ]);
 
 const filteredPosts = computed(() => {
-  let filtered = posts.value;
-
-  if (selectedCategory.value) {
-    filtered = filtered.filter(post => post.category === selectedCategory.value);
-  }
-
-  if (searchTerm.value) {
-    const lowerCaseSearchTerm = searchTerm.value.toLowerCase();
-    filtered = filtered.filter(
-      post =>
-        post.title.toLowerCase().includes(lowerCaseSearchTerm) ||
-        post.tags.some(tag => tag.toLowerCase().includes(lowerCaseSearchTerm))
-    );
-  }
-
-  return filtered;
+  return posts.filter(post => {
+    const matchesSearch = post.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+                         post.tags.some(tag => tag.toLowerCase().includes(searchQuery.value.toLowerCase()));
+    
+    const matchesCategory = selectedCategories.value.length === 0 ||
+                           selectedCategories.value.includes(post.category);
+    
+    return matchesSearch && matchesCategory;
+  });
 });
 
-const uniqueCategories = computed(() => {
-  const categories = new Set(posts.value.map(post => post.category));
-  return Array.from(categories);
-});
+const totalPages = computed(() => Math.ceil(filteredPosts.value.length / postsPerPage));
 
-const totalPages = computed(() => {
-  return Math.ceil(filteredPosts.value.length / postsPerPage);
-});
-
-const paginatedPosts = computed(() => {
+const displayedPosts = computed(() => {
   const start = (currentPage.value - 1) * postsPerPage;
   const end = start + postsPerPage;
   return filteredPosts.value.slice(start, end);
 });
+
+// Methods
+function toggleCategory(category) {
+  const index = selectedCategories.value.indexOf(category);
+  if (index === -1) {
+    selectedCategories.value.push(category);
+  } else {
+    selectedCategories.value.splice(index, 1);
+  }
+  currentPage.value = 1; // Reset to first page when filtering
+}
 </script>

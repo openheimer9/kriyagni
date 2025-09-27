@@ -1,50 +1,58 @@
 <template>
   <section class="py-20 bg-gray-900">
     <div class="container mx-auto px-4">
-      <div class="max-w-2xl mx-auto text-center mb-12" data-aos="fade-up">
+      <div class="max-w-2xl mx-auto text-center mb-12">
         <h2 class="text-3xl md:text-4xl font-bold mb-4 font-poppins">Get in Touch</h2>
         <p class="text-xl text-gray-400">Have questions? We'd love to hear from you.</p>
       </div>
 
-      <form @submit.prevent="handleSubmit" class="max-w-xl mx-auto" data-aos="fade-up" data-aos-delay="200">
+      <form @submit.prevent="handleSubmit" class="max-w-xl mx-auto">
         <div class="space-y-6">
           <!-- Name Input -->
           <div class="form-group">
-            <input 
-              type="text" 
-              v-model="formData.name" 
-              :class="{ 'has-value': formData.name }" 
+            <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              v-model="formData.name"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               required
             />
-            <label>Your Name</label>
             <div class="line"></div>
           </div>
 
           <!-- Email Input -->
           <div class="form-group">
-            <input 
-              type="email" 
-              v-model="formData.email" 
-              :class="{ 'has-value': formData.email, 'invalid': !isValidEmail && formData.email }" 
+            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              v-model="formData.email"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               required
             />
-            <label>Email Address</label>
             <div class="line"></div>
             <span v-if="!isValidEmail && formData.email" class="error-message">Please enter a valid email address</span>
           </div>
 
           <!-- Message Input -->
           <div class="form-group">
-            <textarea 
-              v-model="formData.message" 
-              :class="{ 'has-value': formData.message }" 
-              rows="4" 
+            <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Message</label>
+            <textarea
+              id="message"
+              name="message"
+              v-model="formData.message"
+              rows="4"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               required
             ></textarea>
-            <label>Your Message</label>
             <div class="line"></div>
           </div>
 
+          <!-- Honeypot Field -->
+          
           <!-- Submit Button -->
           <button 
             type="submit" 
@@ -60,8 +68,10 @@
   </section>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref, computed } from 'vue';
+
+console.log('ContactForm.vue setup running');
 
 const formData = ref({
   name: '',
@@ -70,6 +80,8 @@ const formData = ref({
 });
 
 const isSubmitting = ref(false);
+
+const message = ref('');
 
 const isValidEmail = computed(() => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -80,21 +92,38 @@ const handleSubmit = async () => {
   if (!isValidEmail.value) return;
   
   isSubmitting.value = true;
-  
+
+  const data = new FormData();
+  data.append('access_key', import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY);
+  data.append('name', name.value);
+  data.append('email', email.value);
+  data.append('message', message.value);
+
   try {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Reset form
-    formData.value = {
-      name: '',
-      email: '',
-      message: ''
-    };
-    
-    // Show success message (you can implement your own notification system)
-    alert('Message sent successfully!');
+    const response = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      body: data,
+    });
+
+    if (response.ok) {
+      // Reset form
+      formData.value = {
+        name: '',
+        email: '',
+        message: ''
+      };
+      alert('Message sent successfully!');
+    } else {
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        const errorData = await response.json();
+        alert(`Failed to send message: ${errorData.message}`);
+      } else {
+        alert('Failed to send message. Please try again later.');
+      }
+    }
   } catch (error) {
+    console.error('Error submitting form:', error);
     alert('An error occurred. Please try again.');
   } finally {
     isSubmitting.value = false;

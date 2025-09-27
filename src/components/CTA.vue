@@ -6,7 +6,7 @@
       <div class="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-black/30"></div>
     </div>
 
-    <div class="relative container mx-auto px-4 text-center" data-aos="zoom-in">
+    <div class="relative container mx-auto px-4 text-center">
       <h2 class="text-3xl md:text-5xl font-bold mb-6 text-white font-poppins">
         Ready to Transform Your Business?
       </h2>

@@ -1,14 +1,13 @@
 <template>
   <section class="py-20 bg-gradient-to-b from-gray-900 to-gray-800">
     <div class="container mx-auto px-4">
-      <h2 class="text-4xl font-bold text-center text-white mb-12 font-poppins" data-aos="fade-up">
+      <h2 class="text-4xl font-bold text-center text-white mb-12 font-poppins">
         What Our Clients Say
       </h2>
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
         <div v-for="testimonial in testimonials" :key="testimonial.name"
-             class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl border border-gray-700 transform transition-all duration-300 hover:transform hover:scale-[1.02] hover:shadow-xl hover:border-blue-500/30"
-             data-aos="fade-up">
+             class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl border border-gray-700 transform transition-all duration-300 hover:transform hover:scale-[1.02] hover:shadow-xl hover:border-blue-500/30">
           <!-- Quote Icon -->
           <div class="mb-4 text-blue-400">
             <svg class="w-8 h-8 opacity-50" fill="currentColor" viewBox="0 0 24 24">

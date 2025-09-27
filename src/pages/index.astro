@@ -12,9 +12,9 @@ import Footer from '../components/Footer.vue';
   <Header client:only="vue" />
   <main>
     <Hero />
-    <About client:visible />
-    <CTA client:visible />
-    <ContactForm client:visible />
+    <About />
+    <CTA />
+    <ContactForm client:load />
   </main>
   <Footer client:load />
 </Layout>
