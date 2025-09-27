@@ -94,7 +94,7 @@ const handleSubmit = async () => {
   isSubmitting.value = true;
 
   const data = new FormData();
-  data.append('access_key', import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY);
+  data.append('access_key', import.meta.env.WEB3FORMS_KEY);
   data.append('name', name.value);
   data.append('email', email.value);
   data.append('message', message.value);
